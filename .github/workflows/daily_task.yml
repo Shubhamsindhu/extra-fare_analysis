@@ -1,0 +1,28 @@
+name: Daily Script Run
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # This is for scheduled runs at midnight every day
+  workflow_dispatch:  # Allows manual trigger via GitHub interface
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'  # Specify the version of Python you're using
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pymysql pymongo numpy  # Install required libraries
+
+      - name: Run Python script
+        run: |
+          python analyse_booking_before_after_fare_added.py 2025-01-01 2025-01-31  # Specify the dates to pass
